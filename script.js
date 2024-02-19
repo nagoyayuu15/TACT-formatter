@@ -1,48 +1,48 @@
 console.log("Loading.....")
 
 const changeTable = () => {
-    // ボタンの集合が入っているidを指定
+    // サイトのボタンからサイト名、リンクを取得
+    const topnavContainer = document.getElementById("topnav-container");
     const topnav = document.getElementById("topnav");
-    // ボタンの集合を取る．
     const links = topnav.getElementsByClassName('link-container');
-    // ボタン集合を精査する．
+    // buttonに時間割を入れていく
     let button = new Array(5).fill("").map(() => new Array(5).fill(""));
         for (let i = 0; i < links.length; i++) {
             const siteName = links.item(i).title;
             const lectureData = makeLectureData(siteName);
-            
-            console.log("lectureData:");
-            console.log(lectureData);
             const tagBtnName = lectureData.title;
             const tag = "<a href=" + links.item(i).href + ">" + "<span>" + tagBtnName + "</span>" + "</a>"
-            // console.log(lectureData);
             if(lectureData.time!=null){
                 button[lectureData.time[0][0]][lectureData.time[0][1]] = tag;
                 if(lectureData.time[1]!=null){
                     button[lectureData.time[1][0]][lectureData.time[1][1]] = tag;
                 }
             }
-            
         }
-        console.log(button);
+        // HTMLの書き換え
         topnav.innerHTML = makeTable(button);
-        // console.log()
+        // cssの書き換え
+        const tablecss = document.querySelector(".timeTable");
+        tablecss.style.display = "grid";
+        tablecss.style.gridTemplateColumns = "repeat(5, 1fr)";
+
+
     };
 
+// 返すhtmlの作成
 const makeTable = (button) => {
     const headTable = "<div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div>";
     let timeTable="";
     for(let i=0;i<5;i++){
         for (let j=0;j<5;j++){
-            timeTable += "<div>" + button[i][j] + "</div>";
+            timeTable += "<div>" + button[j][i] + "</div>";
         }
     }
 
-    return "<div style=\"display:grid; grid-template-column:repeat(5,1fr);\">" + headTable + timeTable + "</div>";
+    return "<div class=\"timeTable\">" + headTable + timeTable + "</div>";
 };
 
-
-
+// サイト名から曜日・時限、授業名を取得
 const makeLectureData = (siteName) => {
     const timeData = siteName.match(/\/.*\)$/);
     const title = siteName.replace(/\(.+\)$/, "");
