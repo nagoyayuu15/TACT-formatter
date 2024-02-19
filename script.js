@@ -22,9 +22,10 @@ const changeTable = () => {
         // HTMLの書き換え
         topnav.innerHTML = makeTable(button);
         // cssの書き換え
-        const tablecss = document.querySelector(".timeTable");
-        tablecss.style.display = "grid";
-        tablecss.style.gridTemplateColumns = "repeat(5, 1fr)";
+        
+        const table = document.getElementById("timeTable");
+        applyCss(table);
+
 
 
     };
@@ -39,19 +40,16 @@ const makeTable = (button) => {
         }
     }
 
-    return "<div class=\"timeTable\">" + headTable + timeTable + "</div>";
+    return "<div id=\"timeTable\">" + headTable + timeTable + "</div>";
 };
 
 // サイト名から曜日・時限、授業名を取得
 const makeLectureData = (siteName) => {
     const timeData = siteName.match(/\/.*\)$/);
     const title = siteName.replace(/\(.+\)$/, "");
-    console.log(title);
     if (timeData === null || timeData[0] === "/その他)") {
-        console.log("No TimeData");
         return [null, title];
     }
-    console.log(timeData[0]);
     let time = [[]];
     // 曜日・時限の変換
     switch (timeData[0][1]){
@@ -130,5 +128,25 @@ const makeLectureData = (siteName) => {
     }
     return {time: time, title: title};
 };
+
+// cssの適用
+const applyCss = (table) =>{
+    table.style.display = "grid";
+    table.style.gridTemplateColumns = "repeat(5, 1fr)";
+    table.style.webkitAlignItems = "center";
+    table.style.marginBottom = "10px";
+    const links = table.querySelectorAll('div');
+    links.forEach(link => {
+        link.style.webkitAlignItems = "center";
+        link.style.alignItems = "center";
+        link.style.background = "#ebebeb";
+        link.style.textAlign = "center";
+    });
+    table.querySelectorAll('a').forEach(link => {
+        link.style.textDecoration = "none";
+        link.style.color = "#404040";
+    });
+
+}
 
 changeTable();

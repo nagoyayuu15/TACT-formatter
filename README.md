@@ -6,7 +6,7 @@
 TACTの~~信じられないほど見にくい~~サイト一覧を改善します。
 サイト名から時間割を取得し、整列させます。
 
-### 2. Comfortable Sakai(pandA)と共存
+### 2. Comfortable Sakai(pandA)と共存(未実装)
 多くの人が使っているComfortable Sakai(PandA)の締め切りごとにサイトの色を変える機能はそのまま使えます。
 
 
