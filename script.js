@@ -22,31 +22,14 @@ const changeTable = () => {
         // HTMLの書き換え
         topnav.innerHTML = makeTable(button);
         // cssの書き換え
-        
         const table = document.getElementById("timeTable");
         applyCss(table);
-
-
-
     };
-
-// 返すhtmlの作成
-const makeTable = (button) => {
-    const headTable = "<div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div>";
-    let timeTable="";
-    for(let i=0;i<5;i++){
-        for (let j=0;j<5;j++){
-            timeTable += "<div>" + button[j][i] + "</div>";
-        }
-    }
-
-    return "<div id=\"timeTable\">" + headTable + timeTable + "</div>";
-};
 
 // サイト名から曜日・時限、授業名を取得
 const makeLectureData = (siteName) => {
-    const timeData = siteName.match(/\/.*\)$/);
-    const title = siteName.replace(/\(.+\)$/, "");
+    const timeData = siteName.match(/\/.*\).*$/);
+    const title = siteName.replace(/\(.+\).*$/, "");
     if (timeData === null || timeData[0] === "/その他)") {
         return [null, title];
     }
@@ -129,10 +112,24 @@ const makeLectureData = (siteName) => {
     return {time: time, title: title};
 };
 
+// 返すhtmlの作成
+const makeTable = (button) => {
+    const headTable = "<div></div><div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div>";
+    let timeTable="";
+    for(let i=0;i<5;i++){
+        timeTable += "<div>" + (i+1) + "限</div>";
+        for (let j=0;j<5;j++){
+            
+            timeTable += "<div>" + button[j][i] + "</div>";
+        }
+    }
+    return "<div id=\"timeTable\">" + headTable + timeTable + "</div>";
+};
+
 // cssの適用
 const applyCss = (table) =>{
     table.style.display = "grid";
-    table.style.gridTemplateColumns = "repeat(5, 1fr)";
+    table.style.gridTemplateColumns = "0.2fr repeat(5, 1fr)";
     table.style.webkitAlignItems = "center";
     table.style.marginBottom = "10px";
     const links = table.querySelectorAll('div');
