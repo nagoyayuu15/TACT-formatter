@@ -130,16 +130,21 @@ const makeTable = (button) => {
 const applyCss = (table) =>{
     table.style.display = "grid";
     table.style.gridTemplateColumns = "0.2fr repeat(5, 1fr)";
-    table.style.webkitAlignItems = "center";
+    // table.style.webkitAlignItems = "center";
     table.style.marginBottom = "10px";
+    // table.style.marginRight = "10px";
+    // table.style.background = "#ebebeb";
+    // table.style.border = "1px solid #ddd";
     const links = table.querySelectorAll('div');
     links.forEach(link => {
         link.style.webkitAlignItems = "center";
         link.style.alignItems = "center";
-        link.style.background = "#ebebeb";
+        // link.style.background = "#ebebeb";
         link.style.textAlign = "center";
+        link.style.border = "1px solid #ddd";
     });
     table.querySelectorAll('a').forEach(link => {
+        
         link.style.textDecoration = "none";
         link.style.color = "#404040";
     });
