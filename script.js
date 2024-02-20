@@ -2,7 +2,6 @@ console.log("Loading.....")
 
 const changeTable = () => {
     // サイトのボタンからサイト名、リンクを取得
-    const topnavContainer = document.getElementById("topnav-container");
     const topnav = document.getElementById("topnav");
     const links = topnav.getElementsByClassName('link-container');
     // buttonに時間割を入れていく
@@ -129,8 +128,10 @@ const makeTable = (button) => {
 // cssの適用
 const applyCss = (table) =>{
     table.style.display = "grid";
-    table.style.gridTemplateColumns = "0.2fr repeat(5, 1fr)";
+    table.style.width = "100%";
+    table.style.gridTemplateColumns = "30px repeat(5, 1fr)";
     table.style.marginBottom = "10px";
+
     const links = table.querySelectorAll('div');
     links.forEach(link => {
         link.style.webkitAlignItems = "center";
