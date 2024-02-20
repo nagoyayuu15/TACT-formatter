@@ -1,11 +1,13 @@
 console.log("Loading.....")
+const NUM_OF_DAYS = 5;
+const NUM_OF_PERIODS = 6;
 
 const changeTable = () => {
     // サイトのボタンからサイト名、リンクを取得
     const topnav = document.getElementById("topnav");
     const links = topnav.getElementsByClassName('link-container');
     // buttonに時間割を入れていく
-    let button = new Array(5).fill("").map(() => new Array(5).fill(""));
+    let button = new Array(NUM_OF_DAYS).fill("").map(() => new Array(NUM_OF_PERIODS).fill(""));
         for (let i = 0; i < links.length; i++) {
             const siteName = links.item(i).title;
             const lectureData = makeLectureData(siteName);
@@ -50,6 +52,9 @@ const makeLectureData = (siteName) => {
         case "金":
             time[0].push(4);
             break;
+        case "土":
+            time[0].push(5);
+            break;
     }
     switch (timeData[0][2]){
         case "１":
@@ -66,6 +71,9 @@ const makeLectureData = (siteName) => {
             break;
         case "５":
             time[0].push(4);
+            break;
+        case "６":
+            time[0].push(5);
             break;
     }
     // ２時間以上の処理
@@ -87,6 +95,9 @@ const makeLectureData = (siteName) => {
             case "金":
                 time[1].push(4);
                 break;
+            case "土":
+                time[1].push(5);
+                break;
         }
         switch (timeData[0][6]){
             case "１":
@@ -104,6 +115,9 @@ const makeLectureData = (siteName) => {
             case "５":
                 time[1].push(4);
                 break;
+            case "６":
+                time[1].push(5);
+                break;
         }
     }else{
         time.push(null);
@@ -113,11 +127,11 @@ const makeLectureData = (siteName) => {
 
 // 返すhtmlの作成
 const makeTable = (button) => {
-    const headTable = "<div></div><div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div>";
+    const headTable = (NUM_OF_DAYS === 5) ? "<div></div><div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div>" : "<div></div><div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div><div>土曜日</div>";
     let timeTable="";
-    for(let i=0;i<5;i++){
+    for(let i=0;i<NUM_OF_PERIODS;i++){
         timeTable += "<div>" + (i+1) + "限</div>";
-        for (let j=0;j<5;j++){
+        for (let j=0;j<NUM_OF_DAYS;j++){
             
             timeTable += "<div>" + button[j][i] + "</div>";
         }
@@ -129,7 +143,7 @@ const makeTable = (button) => {
 const applyCss = (table) =>{
     table.style.display = "grid";
     table.style.width = "100%";
-    table.style.gridTemplateColumns = "30px repeat(5, 1fr)";
+    table.style.gridTemplateColumns = "30px repeat("+NUM_OF_DAYS+", 1fr)";
     table.style.marginBottom = "10px";
 
     const links = table.querySelectorAll('div');
