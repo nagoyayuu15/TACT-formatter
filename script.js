@@ -21,7 +21,7 @@ const changeTable = () => {
             }
         }
         // HTMLの書き換え
-        topnav.innerHTML = makeTable(button);
+        topnav.innerHTML = makeTable(button) + topnav.innerHTML;
         // cssの書き換え
         const table = document.getElementById("timeTable");
         applyCss(table);
