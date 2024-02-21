@@ -6,22 +6,27 @@ const changeTable = () => {
     // サイトのボタンからサイト名、リンクを取得
     const topnav = document.getElementById("topnav");
     const links = topnav.getElementsByClassName('link-container');
-    // buttonに時間割を入れていく
-    let button = new Array(NUM_OF_DAYS).fill("").map(() => new Array(NUM_OF_PERIODS).fill(""));
-        for (let i = 0; i < links.length; i++) {
+    const siteLinkButtons = topnav.getElementsByClassName('Mrphs-sitesNav__menuitem ');
+    // buttonに時間割データを入れていく
+    let buttonList = new Array(NUM_OF_DAYS).fill("").map(() => new Array(NUM_OF_PERIODS).fill(""));
+    let noTimeDataSitesHTML = ""
+    for (let i = 0; i < links.length; i++) {
             const siteName = links.item(i).title;
             const lectureData = makeLectureData(siteName);
             const tagBtnName = lectureData.title;
             const tag = "<a href=" + links.item(i).href + ">" + "<span>" + tagBtnName + "</span>" + "</a>"
             if(lectureData.time!=null){
-                button[lectureData.time[0][0]][lectureData.time[0][1]] = tag;
+                buttonList[lectureData.time[0][0]][lectureData.time[0][1]] = tag;
+                // ２時間目もあったら
                 if(lectureData.time[1]!=null){
-                    button[lectureData.time[1][0]][lectureData.time[1][1]] = tag;
+                    buttonList[lectureData.time[1][0]][lectureData.time[1][1]] = tag;
                 }
+            }else{
+                noTimeDataSitesHTML += siteLinkButtons.item(i).outerHTML;
             }
         }
         // HTMLの書き換え
-        topnav.innerHTML = makeTable(button) + topnav.innerHTML;
+        topnav.innerHTML = makeTable(buttonList) + noTimeDataSitesHTML;
         // cssの書き換え
         const table = document.getElementById("timeTable");
         applyCss(table);
@@ -32,7 +37,7 @@ const makeLectureData = (siteName) => {
     const timeData = siteName.match(/\/.*\).*$/);
     const title = siteName.replace(/\(.+\).*$/, "");
     if (timeData === null || timeData[0] === "/その他)") {
-        return [null, title];
+        return {time: null, title: title};
     }
     let time = [[]];
     // 曜日・時限の変換
@@ -126,14 +131,14 @@ const makeLectureData = (siteName) => {
 };
 
 // 返す時間割表の作成
-const makeTable = (button) => {
+const makeTable = (buttonList) => {
     const headTable = (NUM_OF_DAYS === 5) ? "<div></div><div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div>" : "<div></div><div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div><div>土曜日</div>";
     let timeTable="";
     for(let i=0;i<NUM_OF_PERIODS;i++){
         timeTable += "<div>" + (i+1) + "限</div>";
         for (let j=0;j<NUM_OF_DAYS;j++){
             
-            timeTable += "<div>" + button[j][i] + "</div>";
+            timeTable += "<div>" + buttonList[j][i] + "</div>";
         }
     }
     return "<div id=\"timeTable\">" + headTable + timeTable + "</div>";
@@ -159,6 +164,6 @@ const applyCss = (table) =>{
         link.style.color = "#404040";
     });
 
-}
+};
 
 changeTable();
