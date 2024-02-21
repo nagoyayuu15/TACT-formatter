@@ -125,7 +125,7 @@ const makeLectureData = (siteName) => {
     return {time: time, title: title};
 };
 
-// 返すhtmlの作成
+// 返す時間割表の作成
 const makeTable = (button) => {
     const headTable = (NUM_OF_DAYS === 5) ? "<div></div><div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div>" : "<div></div><div>月曜日</div><div>火曜日</div><div>水曜日</div><div>木曜日</div><div>金曜日</div><div>土曜日</div>";
     let timeTable="";
