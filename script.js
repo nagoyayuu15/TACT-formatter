@@ -1,6 +1,6 @@
 console.log("Loading.....")
 const NUM_OF_DAYS = 5;
-const NUM_OF_PERIODS = 6;
+const NUM_OF_PERIODS = 5;
 
 const changeTable = () => {
     // サイトのボタンからサイト名、リンクを取得
@@ -23,8 +23,9 @@ const changeTable = () => {
         linkElement.appendChild(spanElement);
         if(lectureData.time!=null){
             timeTable[lectureData.time[0][0]][lectureData.time[0][1]] = linkElement;
-            // ２時間目もあったら
+            // // ２時間目もあったら
             if(lectureData.time[1]!=null){
+                console.log("yifvbuyafbv");
                 timeTable[lectureData.time[1][0]][lectureData.time[1][1]] = linkElement;
             }
             siteLinkButtons.item(i).remove();
@@ -142,6 +143,14 @@ const makeLectureData = (siteName) => {
 const makeTableHTML = (timeTable) => {
     const table = document.createElement('li');
     table.id = "timeTable";
+    WEEK_LIST = ["月","火","水","木","金","土"];
+    for(let i=0;i<NUM_OF_DAYS+1;i++){
+        const li = document.createElement('li');
+        if(i!=0){
+            li.textContent = WEEK_LIST[i-1];
+        }
+        table.appendChild(li);
+    }
     for(let i=0;i<NUM_OF_PERIODS;i++){
         const li = document.createElement('li');
         li.textContent = (i+1) + "限";
@@ -149,7 +158,8 @@ const makeTableHTML = (timeTable) => {
         for (let j=0;j<NUM_OF_DAYS;j++){
             const li = document.createElement('li');
             if(timeTable[j][i]){
-                li.appendChild(timeTable[j][i]);
+                console.log(timeTable[j][i]);
+                li.appendChild(timeTable[j][i].cloneNode(true));
             }
             table.appendChild(li);
         }
