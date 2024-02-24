@@ -23,9 +23,8 @@ const changeTable = () => {
         linkElement.appendChild(spanElement);
         if(lectureData.time!=null){
             timeTable[lectureData.time[0][0]][lectureData.time[0][1]] = linkElement;
-            // // ２時間目もあったら
+            // ２時間目もあったら
             if(lectureData.time[1]!=null){
-                console.log("yifvbuyafbv");
                 timeTable[lectureData.time[1][0]][lectureData.time[1][1]] = linkElement;
             }
             siteLinkButtons.item(i).remove();
@@ -89,6 +88,9 @@ const makeLectureData = (siteName) => {
         case "６":
             time[0].push(5);
             break;
+        case "７":
+            time[0].push(6);
+            break;
     }
     // ２時間以上の処理
     if(timeData[0][4] === ","){
@@ -132,6 +134,9 @@ const makeLectureData = (siteName) => {
             case "６":
                 time[1].push(5);
                 break;
+            case "７":
+                time[1].push(6);
+                break;
         }
     }else{
         time.push(null);
@@ -158,7 +163,6 @@ const makeTableHTML = (timeTable) => {
         for (let j=0;j<NUM_OF_DAYS;j++){
             const li = document.createElement('li');
             if(timeTable[j][i]){
-                console.log(timeTable[j][i]);
                 li.appendChild(timeTable[j][i].cloneNode(true));
             }
             table.appendChild(li);
