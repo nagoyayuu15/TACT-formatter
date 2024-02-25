@@ -6,7 +6,8 @@
     display: grid;
     width: 100%;
     grid-template-columns: 30px repeat(var(--num-of-days), 1fr);
-    margin-bottom: 10px;
+    margin-top:6px;
+    margin-bottom: 6px;
 }
 
 #timeTable div {
