@@ -1,0 +1,21 @@
+:root {
+    --num-of-days: 6; /* デフォルト値 */
+}
+
+#timeTable {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 30px repeat(var(--num-of-days), 1fr);
+    margin-bottom: 10px;
+}
+
+#timeTable div {
+    border: 1px solid #ddd;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+#timeTable a{
+    text-decoration: none;
+    color:#404040;
+}

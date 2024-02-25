@@ -1,6 +1,7 @@
 console.log("Loading.....")
 const NUM_OF_DAYS = 5;
-const NUM_OF_PERIODS = 5;
+const NUM_OF_PERIODS = 6;
+document.documentElement.style.setProperty('--num-of-days', NUM_OF_DAYS);
 
 const changeTable = () => {
     // サイトのボタンからサイト名、リンクを取得
@@ -35,9 +36,9 @@ const changeTable = () => {
     const topnavContainer = document.getElementById('topnav_container');
     topnavContainer.style.display = "block";
     topnavContainer.insertBefore(makeTableHTML(timeTable),topnav);
-    // cssの書き換え
+    // Comfortable Sakaiがサイト名を読めるようにtableにclassを追加
     const table = document.getElementById("timeTable");
-    applyCss(table);
+    addClass(table);
     // Comfortable Sakaiが勝手にサイトボタンを作らないようにtopnavのidを削除
     topnav.setAttribute('id', '')
 };
@@ -173,32 +174,16 @@ const makeTableHTML = (timeTable) => {
 return table;
 };
 
-// cssの適用
-const applyCss = (table) =>{
+// Idを変更
+const addClass = (table) =>{
     table.className = "Mrphs-sitesNav__menu";
-    table.style.display = "grid";
-    table.style.width = "100%";
-    table.style.gridTemplateColumns = "30px repeat("+NUM_OF_DAYS+", 1fr)";
-    table.style.marginBottom = "10px";
-    table.style.webkitAlignItems = "stretch";
-    table.style.backgroundColor = "white";
-    table.style.listStyle = "none";
-
     const links = table.querySelectorAll('div');
     links.forEach(link => {
         link.className = "Mrphs-sitesNav__menuitem";
-        link.style.webkitAlignItems = "center";
-        link.style.alignItems = "center";
-        link.style.textAlign = "center";
-        link.style.border = "1px solid #ddd";
     });
     table.querySelectorAll('a').forEach(link => {
         link.className = "link-container";
-        
-        link.style.textDecoration = "none";
-        link.style.color = "#404040";
     });
-
 };
 
 changeTable();
