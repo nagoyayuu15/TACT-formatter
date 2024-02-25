@@ -7,7 +7,6 @@ const changeTable = () => {
     const topnav = document.getElementById("topnav");
     const links = topnav.getElementsByClassName('link-container');
     const siteLinkButtons = topnav.getElementsByClassName('Mrphs-sitesNav__menuitem ');
-    const siteLinkButtonsList = Array.from(siteLinkButtons);
     // timeTableに時間割データを入れていく
     let timeTable = new Array(NUM_OF_DAYS).fill(null).map(() => new Array(NUM_OF_PERIODS).fill(null));
     // サイトボタン削除の関係で逆順で処理
@@ -33,11 +32,14 @@ const changeTable = () => {
     }
     
     // HTMLの書き換え
-    topnav.insertBefore(makeTableHTML(timeTable),topnav.firstChild);
+    const topnavContainer = document.getElementById('topnav_container');
+    topnavContainer.style.display = "block";
+    topnavContainer.insertBefore(makeTableHTML(timeTable),topnav);
     // cssの書き換え
     const table = document.getElementById("timeTable");
     applyCss(table);
-    
+    // Comfortable Sakaiが勝手にサイトボタンを作らないようにtopnavのidを削除
+    topnav.setAttribute('id', '')
 };
 
 // サイト名から曜日・時限、授業名を取得
@@ -92,7 +94,7 @@ const makeLectureData = (siteName) => {
             time[0].push(6);
             break;
     }
-    // ２時間以上の処理
+    // ２時間の処理
     if(timeData[0][4] === ","){
         time.push([]);
         switch (timeData[0][5]){
@@ -146,26 +148,26 @@ const makeLectureData = (siteName) => {
 
 // 返す時間割表HTMLの作成
 const makeTableHTML = (timeTable) => {
-    const table = document.createElement('li');
+    const table = document.createElement('div');
     table.id = "timeTable";
     WEEK_LIST = ["月","火","水","木","金","土"];
     for(let i=0;i<NUM_OF_DAYS+1;i++){
-        const li = document.createElement('li');
+        const div = document.createElement('div');
         if(i!=0){
-            li.textContent = WEEK_LIST[i-1];
+            div.textContent = WEEK_LIST[i-1];
         }
-        table.appendChild(li);
+        table.appendChild(div);
     }
     for(let i=0;i<NUM_OF_PERIODS;i++){
-        const li = document.createElement('li');
-        li.textContent = (i+1) + "限";
-        table.appendChild(li);
+        const div = document.createElement('div');
+        div.textContent = (i+1) + "限";
+        table.appendChild(div);
         for (let j=0;j<NUM_OF_DAYS;j++){
-            const li = document.createElement('li');
+            const div = document.createElement('div');
             if(timeTable[j][i]){
-                li.appendChild(timeTable[j][i].cloneNode(true));
+                div.appendChild(timeTable[j][i].cloneNode(true));
             }
-            table.appendChild(li);
+            table.appendChild(div);
         }
     }
 return table;
@@ -173,25 +175,25 @@ return table;
 
 // cssの適用
 const applyCss = (table) =>{
-    // table.className = "Mrphs-sitesNav__menuitem";
-    
+    table.className = "Mrphs-sitesNav__menu";
     table.style.display = "grid";
     table.style.width = "100%";
     table.style.gridTemplateColumns = "30px repeat("+NUM_OF_DAYS+", 1fr)";
     table.style.marginBottom = "10px";
     table.style.webkitAlignItems = "stretch";
     table.style.backgroundColor = "white";
+    table.style.listStyle = "none";
 
-    const links = table.querySelectorAll('li');
+    const links = table.querySelectorAll('div');
     links.forEach(link => {
-        // link.className = "Mrphs-sitesNav__menuitem";
+        link.className = "Mrphs-sitesNav__menuitem";
         link.style.webkitAlignItems = "center";
         link.style.alignItems = "center";
         link.style.textAlign = "center";
         link.style.border = "1px solid #ddd";
     });
     table.querySelectorAll('a').forEach(link => {
-        // link.className = "link-container";
+        link.className = "link-container";
         
         link.style.textDecoration = "none";
         link.style.color = "#404040";
