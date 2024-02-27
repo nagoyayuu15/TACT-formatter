@@ -15,10 +15,7 @@ TACTの~~信じられないほど見にくい~~サイト一覧を改善します
 https://note.com/cute_echium873/n/n997dcf40b3a1
 
 ## その他
-- サイト名から時間割を取得する関係で、命名規則が揃っていないTACT以外のLMSには対応していません。
 - Safari・FireFoxには対応していません。Chrome, Edge, Opera, Brave等のChromium系ブラウザのみ対応です。
-- この拡張機能が原因で生じたいかなる損害に対して責任を負いません。
-
-本機能は尊敬すべき大先輩[まっつんくん](https://mattsun-kun-portfolio.vercel.app/)の[nuct](https://github.com/mattsunkun/nuct)をアップデートする形で作成しました。
+- この拡張機能が原因で生じたいかなる損害に対しても責任を負いません。
 
 不具合・バグを発見した場合はX(旧Twitter)の[@suke_0612](https://twitter.com/suke_0612)までご連絡ください。とても元気があったら直します。
