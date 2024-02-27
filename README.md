@@ -6,8 +6,8 @@
 TACTの~~信じられないほど見にくい~~サイト一覧を改善します。
 サイト名から時間割を取得し、整列させます。
 
-### 2. Comfortable Sakai(PandA)と共存
-多くの人が使っているComfortable Sakai(PandA)はそのまま使えます。
+### 2. Comfortable Sakaiと共存
+多くの人が使っているComfortable Sakaiはそのまま使えます。
 
 ## 導入方法
 画面右上にある緑色のボタン[<>Code]をクリックし、表示されるDownload ZIPをクリックしてください。拡張機能が入ったzipファイルがダウンロードされますから、任意の場所に解凍(展開)してください。
