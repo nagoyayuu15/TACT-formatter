@@ -11,6 +11,7 @@ const changeTable = () => {
     // timeTableに時間割データを入れていく
     let timeTable = new Array(NUM_OF_DAYS).fill(null).map(() => new Array(NUM_OF_PERIODS).fill(null));
     // サイトボタン削除の関係で逆順で処理
+    let timeOverlap = false;
     for (let i = links.length - 1; i >= 0; i--) {
         const siteName = links.item(i).title;
         const lectureData = makeLectureData(siteName);
@@ -22,14 +23,25 @@ const changeTable = () => {
         spanElement.textContent = tagBtnName;
         linkElement.appendChild(spanElement);
         if (lectureData.time != null) {
+            let isAlready = false;
             for (let j = 0; j < lectureData.time.length; j++) {
+                if (timeTable[lectureData.time[j][0]][lectureData.time[j][1]] != null) {
+                    timeOverlap = true;
+                    isAlready = true;
+                    continue;
+                }
                 timeTable[lectureData.time[j][0]][lectureData.time[j][1]] = linkElement;
+            }
+            if (isAlready) {
+                continue;
             }
             siteLinkButtons.item(i).remove();
         }
-
     }
-
+    if (timeOverlap) {
+        // 重複してたらアラートしようかと思ったけど、リロードの毎に出たらうざいのでやめた
+        // alert("Error: 時間が重複している講義があります！");
+    }
     // HTMLの書き換え
     const topnavContainer = document.getElementById('topnav_container');
     topnavContainer.style.display = "block";
@@ -39,17 +51,19 @@ const changeTable = () => {
     addClass(table);
     // Comfortable Sakaiが勝手にサイトボタンを作らないようにtopnavのidを削除
     topnav.setAttribute('id', '')
+
+    return;
 };
 
 // サイト名から曜日・時限、授業名を取得
 const makeLectureData = (siteName) => {
     const timeDataStr = siteName.match(/\/.*\).*$/)
-    console.log(timeDataStr);
+    // console.log(timeDataStr);
     if (timeDataStr === null || timeDataStr[0] === "/その他)") {
         return { time: null, title: siteName };
     }
     const timeData = timeDataStr[0].slice(1, -1);
-    console.log(timeData);
+    // console.log(timeData);
     const title = siteName.replace(/\(.+\).*$/, "");
     const time = timeData.split(",");
     // 曜日・時限の変換
