@@ -1,6 +1,6 @@
 console.log("Loading.....")
 const NUM_OF_DAYS = 5;
-const NUM_OF_PERIODS = 6;
+const NUM_OF_PERIODS = 5;
 document.documentElement.style.setProperty('--num-of-days', NUM_OF_DAYS);
 
 const changeTable = () => {
@@ -11,7 +11,7 @@ const changeTable = () => {
     // timeTableに時間割データを入れていく
     let timeTable = new Array(NUM_OF_DAYS).fill(null).map(() => new Array(NUM_OF_PERIODS).fill(null));
     // サイトボタン削除の関係で逆順で処理
-    for (let i = links.length-1; i >= 0; i--) {
+    for (let i = links.length - 1; i >= 0; i--) {
         const siteName = links.item(i).title;
         const lectureData = makeLectureData(siteName);
         const tagBtnName = lectureData.title;
@@ -21,21 +21,19 @@ const changeTable = () => {
         const spanElement = document.createElement('span');
         spanElement.textContent = tagBtnName;
         linkElement.appendChild(spanElement);
-        if(lectureData.time!=null){
-            timeTable[lectureData.time[0][0]][lectureData.time[0][1]] = linkElement;
-            // ２時間目もあったら
-            if(lectureData.time[1]!=null){
-                timeTable[lectureData.time[1][0]][lectureData.time[1][1]] = linkElement;
+        if (lectureData.time != null) {
+            for (let j = 0; j < lectureData.time.length; j++) {
+                timeTable[lectureData.time[j][0]][lectureData.time[j][1]] = linkElement;
             }
             siteLinkButtons.item(i).remove();
         }
-        
+
     }
-    
+
     // HTMLの書き換え
     const topnavContainer = document.getElementById('topnav_container');
     topnavContainer.style.display = "block";
-    topnavContainer.insertBefore(makeTableHTML(timeTable),topnav);
+    topnavContainer.insertBefore(makeTableHTML(timeTable), topnav);
     // Comfortable Sakaiがサイト名を読めるようにtableにclassを追加
     const table = document.getElementById("timeTable");
     addClass(table);
@@ -45,137 +43,96 @@ const changeTable = () => {
 
 // サイト名から曜日・時限、授業名を取得
 const makeLectureData = (siteName) => {
-    const timeData = siteName.match(/\/.*\).*$/);
+    const timeDataStr = siteName.match(/\/.*\).*$/)
+    console.log(timeDataStr);
+    if (timeDataStr === null || timeDataStr[0] === "/その他)") {
+        return { time: null, title: siteName };
+    }
+    const timeData = timeDataStr[0].slice(1, -1);
+    console.log(timeData);
     const title = siteName.replace(/\(.+\).*$/, "");
-    if (timeData === null || timeData[0] === "/その他)") {
-        return {time: null, title: title};
-    }
-    let time = [[]];
+    const time = timeData.split(",");
     // 曜日・時限の変換
-    switch (timeData[0][1]){
-        case "月":
-            time[0].push(0);
-            break;
-        case "火":
-            time[0].push(1);
-            break;
-        case "水":
-            time[0].push(2);
-            break;
-        case "木":
-            time[0].push(3);
-            break;
-        case "金":
-            time[0].push(4);
-            break;
-        case "土":
-            time[0].push(5);
-            break;
-    }
-    switch (timeData[0][2]){
-        case "１":
-            time[0].push(0);
-            break;
-        case "２":
-            time[0].push(1);
-            break;
-        case "３":
-            time[0].push(2);
-            break;
-        case "４":
-            time[0].push(3);
-            break;
-        case "５":
-            time[0].push(4);
-            break;
-        case "６":
-            time[0].push(5);
-            break;
-        case "７":
-            time[0].push(6);
-            break;
-    }
-    // ２時間の処理
-    if(timeData[0][4] === ","){
-        time.push([]);
-        switch (timeData[0][5]){
+    let timeProcessed = [];
+    for (let i = 0; i < time.length; i++) {
+        const severalTime = time[i];
+        timeProcessed.push([]);
+        switch (severalTime[0]) {
             case "月":
-                time[1].push(0);
+                timeProcessed[i].push(0);
                 break;
             case "火":
-                time[1].push(1);
+                timeProcessed[i].push(1);
                 break;
             case "水":
-                time[1].push(2);
+                timeProcessed[i].push(2);
                 break;
             case "木":
-                time[1].push(3);
+                timeProcessed[i].push(3);
                 break;
             case "金":
-                time[1].push(4);
+                timeProcessed[i].push(4);
                 break;
             case "土":
-                time[1].push(5);
+                timeProcessed[i].push(5);
                 break;
         }
-        switch (timeData[0][6]){
+        switch (severalTime[1]) {
             case "１":
-                time[1].push(0);
+                timeProcessed[i].push(0);
                 break;
             case "２":
-                time[1].push(1);
+                timeProcessed[i].push(1);
                 break;
             case "３":
-                time[1].push(2);
+                timeProcessed[i].push(2);
                 break;
             case "４":
-                time[1].push(3);
+                timeProcessed[i].push(3);
                 break;
             case "５":
-                time[1].push(4);
+                timeProcessed[i].push(4);
                 break;
             case "６":
-                time[1].push(5);
+                timeProcessed[i].push(5);
                 break;
             case "７":
-                time[1].push(6);
+                timeProcessed[i].push(6);
                 break;
         }
-    }else{
-        time.push(null);
     }
-    return {time: time, title: title};
+    return { time: timeProcessed, title: title };
 };
 
 // 返す時間割表HTMLの作成
 const makeTableHTML = (timeTable) => {
     const table = document.createElement('div');
     table.id = "timeTable";
-    WEEK_LIST = ["月","火","水","木","金","土"];
-    for(let i=0;i<NUM_OF_DAYS+1;i++){
+    WEEK_LIST = ["月", "火", "水", "木", "金", "土"];
+    for (let i = 0; i < NUM_OF_DAYS + 1; i++) {
         const div = document.createElement('div');
-        if(i!=0){
-            div.textContent = WEEK_LIST[i-1];
+        if (i != 0) {
+            div.textContent = WEEK_LIST[i - 1];
         }
         table.appendChild(div);
     }
-    for(let i=0;i<NUM_OF_PERIODS;i++){
+    for (let i = 0; i < NUM_OF_PERIODS; i++) {
         const div = document.createElement('div');
-        div.textContent = (i+1) + "限";
+        div.textContent = (i + 1) + "限";
         table.appendChild(div);
-        for (let j=0;j<NUM_OF_DAYS;j++){
+        for (let j = 0; j < NUM_OF_DAYS; j++) {
             const div = document.createElement('div');
-            if(timeTable[j][i]){
+            if (timeTable[j][i]) {
                 div.appendChild(timeTable[j][i].cloneNode(true));
             }
             table.appendChild(div);
         }
     }
-return table;
+    return table;
 };
 
 // Idを変更
-const addClass = (table) =>{
+const addClass = (table) => {
     table.className = "Mrphs-sitesNav__menu";
     const links = table.querySelectorAll('div');
     links.forEach(link => {
