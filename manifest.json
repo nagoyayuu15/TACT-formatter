@@ -1,0 +1,23 @@
+{
+	"name": "TACT-formatter",
+	"manifest_version": 3,
+	"description": "better UI for TACT", 
+	"version": "0.1",
+	"permissions": ["activeTab","scripting"],
+	"background": {
+		"service_worker": "alert.js"
+	},
+	"action": {
+		"default_icon": {
+			"16": "images/TimeTable.png"
+		}
+	},
+	"content_scripts": [
+		{
+			"matches": ["https://tact.ac.thers.ac.jp/*"],
+			"js": ["script.js"],
+			"css":["style.css"]
+		}
+	]
+}
+

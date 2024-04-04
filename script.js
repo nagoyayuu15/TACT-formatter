@@ -9,9 +9,9 @@ const changeTable = () => {
     const links = topnav.getElementsByClassName('link-container');
     const siteLinkButtons = topnav.getElementsByClassName('Mrphs-sitesNav__menuitem ');
     // timeTableに時間割データを入れていく
-    let timeTable = new Array(NUM_OF_DAYS).fill(null).map(() => new Array(NUM_OF_PERIODS).fill(null));
+    let timeTableArray = new Array(NUM_OF_DAYS).fill(null).map(() => new Array(NUM_OF_PERIODS).fill(null));
     // サイトボタン削除の関係で逆順で処理
-    let timeOverlap = false;
+    let isTimeOverlap = false;
     for (let i = links.length - 1; i >= 0; i--) {
         const siteName = links.item(i).title;
         const lectureData = makeLectureData(siteName);
@@ -25,12 +25,12 @@ const changeTable = () => {
         if (lectureData.time != null) {
             let isAlready = false;
             for (let j = 0; j < lectureData.time.length; j++) {
-                if (timeTable[lectureData.time[j][0]][lectureData.time[j][1]] != null) {
-                    timeOverlap = true;
+                if (timeTableArray[lectureData.time[j][0]][lectureData.time[j][1]] != null) {
+                    isTimeOverlap = true;
                     isAlready = true;
                     continue;
                 }
-                timeTable[lectureData.time[j][0]][lectureData.time[j][1]] = linkElement;
+                timeTableArray[lectureData.time[j][0]][lectureData.time[j][1]] = linkElement;
             }
             if (isAlready) {
                 continue;
@@ -38,14 +38,14 @@ const changeTable = () => {
             siteLinkButtons.item(i).remove();
         }
     }
-    if (timeOverlap) {
+    if (isTimeOverlap) {
         // 重複してたらアラートしようかと思ったけど、リロードの毎に出たらうざいのでやめた
         // alert("Error: 時間が重複している講義があります！");
     }
     // HTMLの書き換え
     const topnavContainer = document.getElementById('topnav_container');
     topnavContainer.style.display = "block";
-    topnavContainer.insertBefore(makeTableHTML(timeTable), topnav);
+    topnavContainer.insertBefore(makeTableHTML(timeTableArray), topnav);
     // Comfortable Sakaiがサイト名を読めるようにtableにclassを追加
     const table = document.getElementById("timeTable");
     addClass(table);
@@ -119,7 +119,7 @@ const makeLectureData = (siteName) => {
 };
 
 // 返す時間割表HTMLの作成
-const makeTableHTML = (timeTable) => {
+const makeTableHTML = (timeTableArray) => {
     const table = document.createElement('div');
     table.id = "timeTable";
     WEEK_LIST = ["月", "火", "水", "木", "金", "土"];
@@ -136,8 +136,8 @@ const makeTableHTML = (timeTable) => {
         table.appendChild(div);
         for (let j = 0; j < NUM_OF_DAYS; j++) {
             const div = document.createElement('div');
-            if (timeTable[j][i]) {
-                div.appendChild(timeTable[j][i].cloneNode(true));
+            if (timeTableArray[j][i]) {
+                div.appendChild(timeTableArray[j][i].cloneNode(true));
             }
             table.appendChild(div);
         }
