@@ -45,13 +45,23 @@ const changeTable = () => {
     // HTMLの書き換え
     const topnavContainer = document.getElementById('topnav_container');
     topnavContainer.style.display = "block";
-    topnavContainer.insertBefore(makeTableHTML(timeTableArray), topnav);
+    const timeTableHTML = makeTableHTML(timeTableArray)
+    topnavContainer.insertBefore(timeTableHTML, topnav);
+
     // Comfortable Sakaiがサイト名を読めるようにtableにclassを追加
     const table = document.getElementById("timeTable");
     addClass(table);
     // Comfortable Sakaiが勝手にサイトボタンを作らないようにtopnavのidを削除
     topnav.setAttribute('id', '')
+    // // データを保存
+    // chrome.storage.local.set({ key: 'value' }, function () {
+    //     console.log('Value is set to ' + 'value');
+    // });
 
+    // // データを取得
+    // chrome.storage.local.get(['key'], function (result) {
+    //     console.log('Value currently is ' + result.key);
+    // });
     return;
 };
 
@@ -118,16 +128,36 @@ const makeLectureData = (siteName) => {
     return { time: timeProcessed, title: title };
 };
 
+const makePeriodButtons = () => {
+    const earlyPeriodButton = document.createElement('div');
+    earlyPeriodButton.classList.add("periodButton");
+    earlyPeriodButton.textContent = "1期";
+    const latePeriodButton = document.createElement('div');
+    latePeriodButton.classList.add("periodButton");
+    latePeriodButton.textContent = "2期";
+    const periodButtonContainer = document.createElement('div');
+    periodButtonContainer.classList.add("periodButtonContainer");
+    periodButtonContainer.appendChild(earlyPeriodButton);
+    periodButtonContainer.appendChild(latePeriodButton);
+
+    return periodButtonContainer;
+};
+
 // 返す時間割表HTMLの作成
 const makeTableHTML = (timeTableArray) => {
     const table = document.createElement('div');
     table.id = "timeTable";
-    WEEK_LIST = ["月", "火", "水", "木", "金", "土"];
-    for (let i = 0; i < NUM_OF_DAYS + 1; i++) {
+    const periodButtonContainer = makePeriodButtons();
+    table.appendChild(periodButtonContainer);
+    const emptyDiv = document.createElement('div');
+    emptyDiv.classList.add("emptyDiv");
+    table.appendChild(emptyDiv);
+    const div = document.createElement('div');
+    table.appendChild(div);
+    for (let i = 1; i < NUM_OF_DAYS + 1; i++) {
+        const WEEK_LIST = ["月", "火", "水", "木", "金", "土"];
         const div = document.createElement('div');
-        if (i != 0) {
-            div.textContent = WEEK_LIST[i - 1];
-        }
+        div.textContent = WEEK_LIST[i - 1];
         table.appendChild(div);
     }
     for (let i = 0; i < NUM_OF_PERIODS; i++) {
@@ -145,15 +175,15 @@ const makeTableHTML = (timeTableArray) => {
     return table;
 };
 
-// Idを変更
+// classを変更
 const addClass = (table) => {
-    table.className = "Mrphs-sitesNav__menu";
+    table.classList.add("Mrphs-sitesNav__menu");
     const links = table.querySelectorAll('div');
     links.forEach(link => {
-        link.className = "Mrphs-sitesNav__menuitem";
+        link.classList.add("Mrphs-sitesNav__menuitem");
     });
     table.querySelectorAll('a').forEach(link => {
-        link.className = "link-container";
+        link.classList.add("link-container");
     });
 };
 

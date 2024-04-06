@@ -1,12 +1,35 @@
 :root {
-    --num-of-days: 6; /* デフォルト値 */
+    --num-of-days: 6;
+    /* デフォルト値 */
+}
+
+.periodButtonContainer {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: none !important;
+}
+
+.emptyDiv {
+    grid-column-start: 3;
+    grid-column-end: -1;
+    border: none !important;
+
+}
+
+.periodButton {}
+
+.periodButtonSelected {
+    color: #0f3e57;
+    background-color: #cadae3;
 }
 
 #timeTable {
     display: grid;
     width: 100%;
     grid-template-columns: 30px repeat(var(--num-of-days), 1fr);
-    margin-top:6px;
+    margin-top: 6px;
     margin-bottom: 6px;
 }
 
@@ -16,7 +39,7 @@
     border: 1px solid #ddd;
 }
 
-#timeTable a{
+#timeTable a {
     text-decoration: none;
-    color:#404040;
+    color: #404040;
 }
