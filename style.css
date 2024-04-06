@@ -18,15 +18,7 @@
 
 }
 
-.periodButton {}
-
-.periodButtonSelected {
-    color: #0f3e57;
-    background-color: #cadae3;
-    font-weight: 600;
-}
-
-#timeTable {
+.timeTable {
     display: grid;
     width: 100%;
     grid-template-columns: 30px repeat(var(--num-of-days), 1fr);
@@ -34,13 +26,26 @@
     margin-bottom: 6px;
 }
 
-#timeTable div {
+.timeTable div {
     border: 1px solid #ddd;
     text-align: center;
     border: 1px solid #ddd;
 }
 
-#timeTable a {
-    text-decoration: none;
-    color: #404040;
+.timeTable a {
+    text-decoration: none !important;
+    color: #404040 !important;
+}
+
+#firstTimeTable .firstPeriodButton {
+
+    color: #0f3e57;
+    background-color: #cadae3;
+    font-weight: 600;
+}
+
+#secondTimeTable .secondPeriodButton {
+    color: #0f3e57;
+    background-color: #cadae3;
+    font-weight: 600;
 }
