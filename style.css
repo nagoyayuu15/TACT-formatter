@@ -23,6 +23,7 @@
 .periodButtonSelected {
     color: #0f3e57;
     background-color: #cadae3;
+    font-weight: 600;
 }
 
 #timeTable {
