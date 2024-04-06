@@ -3,13 +3,43 @@ const NUM_OF_DAYS = 5;
 const NUM_OF_PERIODS = 5;
 document.documentElement.style.setProperty('--num-of-days', NUM_OF_DAYS);
 
-const changeTable = () => {
+const main = () => {
+    topnav = document.getElementById("topnav");
+
+    const timeTableArray = makeTimeTableArray();
+
+    const firstTimeTableHTML = makeTimeTableHTML(timeTableArray[0]);
+    firstTimeTableHTML.id = "firstTimeTable";
+    const secondTimeTableHTML = makeTimeTableHTML(timeTableArray[1]);
+    secondTimeTableHTML.id = "secondTimeTable";
+
+    applyClass(firstTimeTableHTML);
+    applyClass(secondTimeTableHTML);
+    const topnavContainer = document.getElementById("topnav_container");
+    topnavContainer.style.display = "block";
+    topnavContainer.insertBefore(firstTimeTableHTML, topnav);
+    topnavContainer.insertBefore(secondTimeTableHTML, topnav);
+
+    chrome.storage.local.get(['isFirstTerm'], function (result) {
+        if (result.isFirstTerm) {
+            firstTimeTableHTML.style.display = "grid";
+            secondTimeTableHTML.style.display = "none";
+        } else {
+            firstTimeTableHTML.style.display = "none";
+            secondTimeTableHTML.style.display = "grid";
+        }
+    });
+
+    topnav.id = "";
+    return;
+}
+
+const makeTimeTableArray = () => {
+    let timeTableArray = new Array(2).fill(null).map(() => new Array(NUM_OF_DAYS).fill(null).map(() => new Array(NUM_OF_PERIODS).fill(null)));
     // サイトのボタンからサイト名、リンクを取得
-    const topnav = document.getElementById("topnav");
     const links = topnav.getElementsByClassName('link-container');
     const siteLinkButtons = topnav.getElementsByClassName('Mrphs-sitesNav__menuitem ');
     // timeTableに時間割データを入れていく
-    let timeTableArray = new Array(NUM_OF_DAYS).fill(null).map(() => new Array(NUM_OF_PERIODS).fill(null));
     // サイトボタン削除の関係で逆順で処理
     let isTimeOverlap = false;
     for (let i = links.length - 1; i >= 0; i--) {
@@ -24,13 +54,27 @@ const changeTable = () => {
         linkElement.appendChild(spanElement);
         if (lectureData.time != null) {
             let isAlready = false;
-            for (let j = 0; j < lectureData.time.length; j++) {
-                if (timeTableArray[lectureData.time[j][0]][lectureData.time[j][1]] != null) {
-                    isTimeOverlap = true;
-                    isAlready = true;
-                    continue;
+            if (lectureData.term.first) {
+                for (let j = 0; j < lectureData.time.length; j++) {
+                    if (timeTableArray[0][lectureData.time[j][0]][lectureData.time[j][1]] != null) {
+                        isTimeOverlap = true;
+                        isAlready = true;
+                        continue;
+                    }
+                    timeTableArray[0][lectureData.time[j][0]][lectureData.time[j][1]] = linkElement.cloneNode(true);
                 }
-                timeTableArray[lectureData.time[j][0]][lectureData.time[j][1]] = linkElement;
+            }
+            if (lectureData.term.second) {
+                // 2期の場合は2期のボタンを作成
+                for (let j = 0; j < lectureData.time.length; j++) {
+                    if (timeTableArray[1][lectureData.time[j][0]][lectureData.time[j][1]] != null) {
+                        isTimeOverlap = true;
+                        isAlready = true;
+                        continue;
+                    }
+                    timeTableArray[1][lectureData.time[j][0]][lectureData.time[j][1]] = linkElement.cloneNode(true);
+                }
+
             }
             if (isAlready) {
                 continue;
@@ -42,30 +86,39 @@ const changeTable = () => {
         // 重複してたらアラートしようかと思ったけど、リロードの毎に出たらうざいのでやめた
         // alert("Error: 時間が重複している講義があります！");
     }
-    // HTMLの書き換え
-    const topnavContainer = document.getElementById('topnav_container');
-    topnavContainer.style.display = "block";
-    topnavContainer.insertBefore(makeTableHTML(timeTableArray), topnav);
-    // Comfortable Sakaiがサイト名を読めるようにtableにclassを追加
-    const table = document.getElementById("timeTable");
-    addClass(table);
-    // Comfortable Sakaiが勝手にサイトボタンを作らないようにtopnavのidを削除
-    topnav.setAttribute('id', '')
-
-    return;
+    return timeTableArray;
 };
 
 // サイト名から曜日・時限、授業名を取得
 const makeLectureData = (siteName) => {
-    const timeDataStr = siteName.match(/\/.*\).*$/)
-    // console.log(timeDataStr);
-    if (timeDataStr === null || timeDataStr[0] === "/その他)") {
-        return { time: null, title: siteName };
-    }
-    const timeData = timeDataStr[0].slice(1, -1);
+    const timeData = siteName.match(/\(\d\d\d\d年度(.+)\/(.+)\)/);
     // console.log(timeData);
-    const title = siteName.replace(/\(.+\).*$/, "");
-    const time = timeData.split(",");
+
+    if (timeData === null) {
+        return { term: null, time: null, title: siteName };
+    }
+
+    const termStr = timeData[1];
+    let firstTerm = false;
+    let secondTerm = false;
+    if (termStr.length === 3) {
+        switch (termStr[1]) {
+            case "１":
+                firstTerm = true;
+                break;
+            case "２":
+                secondTerm = true;
+                break;
+        }
+    } else {
+        firstTerm = true;
+        secondTerm = true;
+    }
+    if (timeData[2] === "その他") {
+        return { term: { first: firstTerm, second: secondTerm }, time: null, title: siteName };
+    }
+    const title = siteName.replace(/\(\d\d\d\d年度.+\/.+$/, "");
+    const time = timeData[2].split(",");
     // 曜日・時限の変換
     let timeProcessed = [];
     for (let i = 0; i < time.length; i++) {
@@ -115,19 +168,23 @@ const makeLectureData = (siteName) => {
                 break;
         }
     }
-    return { time: timeProcessed, title: title };
+    return { term: { first: firstTerm, second: secondTerm }, time: timeProcessed, title: title };
 };
 
-// 返す時間割表HTMLの作成
-const makeTableHTML = (timeTableArray) => {
+const makeTimeTableHTML = (timeTableArray) => {
     const table = document.createElement('div');
-    table.id = "timeTable";
-    WEEK_LIST = ["月", "火", "水", "木", "金", "土"];
-    for (let i = 0; i < NUM_OF_DAYS + 1; i++) {
+    table.classList.add("timeTable");
+    const periodButtonContainer = makePeriodButtons();
+    table.appendChild(periodButtonContainer);
+    const emptyDiv = document.createElement('div');
+    emptyDiv.classList.add("emptyDiv");
+    table.appendChild(emptyDiv);
+    const div = document.createElement('div');
+    table.appendChild(div);
+    for (let i = 1; i < NUM_OF_DAYS + 1; i++) {
+        const WEEK_LIST = ["月", "火", "水", "木", "金", "土"];
         const div = document.createElement('div');
-        if (i != 0) {
-            div.textContent = WEEK_LIST[i - 1];
-        }
+        div.textContent = WEEK_LIST[i - 1];
         table.appendChild(div);
     }
     for (let i = 0; i < NUM_OF_PERIODS; i++) {
@@ -145,16 +202,63 @@ const makeTableHTML = (timeTableArray) => {
     return table;
 };
 
-// Idを変更
-const addClass = (table) => {
-    table.className = "Mrphs-sitesNav__menu";
-    const links = table.querySelectorAll('div');
-    links.forEach(link => {
-        link.className = "Mrphs-sitesNav__menuitem";
+const makePeriodButtons = () => {
+    const earlyPeriodButton = document.createElement('div');
+    earlyPeriodButton.classList.add("firstPeriodButton");
+    earlyPeriodButton.textContent = "1期";
+    earlyPeriodButton.addEventListener('click', () => {
+        chrome.storage.local.set({ isFirstTerm: true });
+        updateTableHTML();
+
     });
-    table.querySelectorAll('a').forEach(link => {
-        link.className = "link-container";
+    const latePeriodButton = document.createElement('div');
+    latePeriodButton.classList.add("secondPeriodButton");
+    latePeriodButton.textContent = "2期";
+    latePeriodButton.addEventListener('click', () => {
+        chrome.storage.local.set({ isFirstTerm: false });
+        updateTableHTML();
+
+
+    });
+    chrome.storage.local.get(['isFirstTerm'], function (result) {
+        if (result.isFirstTerm) {
+            earlyPeriodButton.classList.add("periodButtonSelected");
+        } else {
+            latePeriodButton.classList.add("periodButtonSelected");
+        }
+    });
+    const periodButtonContainer = document.createElement('div');
+    periodButtonContainer.classList.add("periodButtonContainer");
+    periodButtonContainer.appendChild(earlyPeriodButton);
+    periodButtonContainer.appendChild(latePeriodButton);
+
+    return periodButtonContainer;
+};
+
+const applyClass = (timeTableHTML) => {
+    timeTableHTML.classList.add("Mrphs-sitesNav__menu");
+    const links = timeTableHTML.querySelectorAll('div');
+    links.forEach(link => {
+        link.classList.add("Mrphs-sitesNav__menuitem");
+    });
+    timeTableHTML.querySelectorAll('a').forEach(link => {
+        link.classList.add("link-container");
     });
 };
 
-changeTable();
+const updateTableHTML = () => {
+    chrome.storage.local.get(['isFirstTerm'], function (result) {
+        const isFirstTerm = result.isFirstTerm;
+        firstTimeTable = document.getElementById("firstTimeTable");
+        secondTimeTable = document.getElementById("secondTimeTable");
+        if (isFirstTerm) {
+            firstTimeTable.style.display = "grid";
+            secondTimeTable.style.display = "none";
+        } else {
+            firstTimeTable.style.display = "none";
+            secondTimeTable.style.display = "grid";
+        }
+    });
+}
+
+main();

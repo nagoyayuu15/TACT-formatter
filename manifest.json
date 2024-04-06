@@ -1,9 +1,13 @@
 {
 	"name": "TACT-formatter",
 	"manifest_version": 3,
-	"description": "better UI for TACT", 
+	"description": "better UI for TACT",
 	"version": "0.1",
-	"permissions": ["activeTab","scripting"],
+	"permissions": [
+		"activeTab",
+		"scripting",
+		"storage"
+	],
 	"background": {
 		"service_worker": "alert.js"
 	},
@@ -14,10 +18,15 @@
 	},
 	"content_scripts": [
 		{
-			"matches": ["https://tact.ac.thers.ac.jp/*"],
-			"js": ["script.js"],
-			"css":["style.css"]
+			"matches": [
+				"https://tact.ac.thers.ac.jp/*"
+			],
+			"js": [
+				"script.js"
+			],
+			"css": [
+				"style.css"
+			]
 		}
 	]
 }
-
