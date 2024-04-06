@@ -174,7 +174,7 @@ const makeLectureData = (siteName) => {
 const makeTimeTableHTML = (timeTableArray) => {
     const table = document.createElement('div');
     table.classList.add("timeTable");
-    const periodButtonContainer = makePeriodButtons(timeTableArray);
+    const periodButtonContainer = makePeriodButtons();
     table.appendChild(periodButtonContainer);
     const emptyDiv = document.createElement('div');
     emptyDiv.classList.add("emptyDiv");
@@ -202,13 +202,13 @@ const makeTimeTableHTML = (timeTableArray) => {
     return table;
 };
 
-const makePeriodButtons = (timeTableArray) => {
+const makePeriodButtons = () => {
     const earlyPeriodButton = document.createElement('div');
     earlyPeriodButton.classList.add("firstPeriodButton");
     earlyPeriodButton.textContent = "1期";
     earlyPeriodButton.addEventListener('click', () => {
         chrome.storage.local.set({ isFirstTerm: true });
-        updateTableHTML(earlyPeriodButton, latePeriodButton);
+        updateTableHTML();
 
     });
     const latePeriodButton = document.createElement('div');
@@ -216,7 +216,7 @@ const makePeriodButtons = (timeTableArray) => {
     latePeriodButton.textContent = "2期";
     latePeriodButton.addEventListener('click', () => {
         chrome.storage.local.set({ isFirstTerm: false });
-        updateTableHTML(earlyPeriodButton, latePeriodButton);
+        updateTableHTML();
 
 
     });
@@ -246,7 +246,7 @@ const applyClass = (timeTableHTML) => {
     });
 };
 
-const updateTableHTML = (earlyPeriodButton, latePeriodButton) => {
+const updateTableHTML = () => {
     chrome.storage.local.get(['isFirstTerm'], function (result) {
         const isFirstTerm = result.isFirstTerm;
         firstTimeTable = document.getElementById("firstTimeTable");
