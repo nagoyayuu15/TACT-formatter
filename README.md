@@ -18,4 +18,4 @@ https://note.com/cute_echium873/n/n997dcf40b3a1
 - Safari・FireFoxには対応していません。Chrome, Edge, Opera, Brave等のChromium系ブラウザのみ対応です。
 - この拡張機能が原因で生じたいかなる損害に対しても責任を負いません。
 
-不具合・バグを発見した場合はX(旧Twitter)の[@suke_0612](https://twitter.com/suke_0612)までご連絡ください。とても元気があったら直します。
+不具合・バグを発見した場合はX(Twitter)の[@suke_0612](https://twitter.com/suke_0612)までご連絡ください。とても元気があったら直します。

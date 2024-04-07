@@ -74,7 +74,6 @@ const makeTimeTableArray = () => {
                     }
                     timeTableArray[1][lectureData.time[j][0]][lectureData.time[j][1]] = linkElement.cloneNode(true);
                 }
-
             }
             if (isAlready) {
                 continue;
@@ -83,8 +82,17 @@ const makeTimeTableArray = () => {
         }
     }
     if (isTimeOverlap) {
-        // 重複してたらアラートしようかと思ったけど、リロードの毎に出たらうざいのでやめた
-        // alert("Error: 時間が重複している講義があります！");
+        // 講義が重複した場合に警告を出す
+        overlapWarning = document.createElement('div');
+        overlapWarning.textContent = "時間が重複している講義があります！";
+        overlapWarning.style.width = "10em";
+        overlapWarning.style.backgroundColor = "#a20000";
+        overlapWarning.style.borderRadius = "2px";
+        overlapWarning.style.color = "white";
+        overlapWarning.style.fontWeight = "bold";
+        overlapWarning.classList.add("fa");
+        overlapWarning.classList.add("fa-warning");
+        topnav.insertBefore(overlapWarning, topnav.firstChild);
     }
     return timeTableArray;
 };
@@ -92,12 +100,9 @@ const makeTimeTableArray = () => {
 // サイト名から曜日・時限、授業名を取得
 const makeLectureData = (siteName) => {
     const timeData = siteName.match(/\(\d\d\d\d年度(.+)\/(.+)\)/);
-    // console.log(timeData);
-
     if (timeData === null) {
         return { term: null, time: null, title: siteName };
     }
-
     const termStr = timeData[1];
     let firstTerm = false;
     let secondTerm = false;
