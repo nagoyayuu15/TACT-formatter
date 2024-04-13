@@ -8,9 +8,6 @@
 		"scripting",
 		"storage"
 	],
-	"background": {
-		"service_worker": "alert.js"
-	},
 	"action": {
 		"default_icon": {
 			"16": "images/TimeTable.png"
