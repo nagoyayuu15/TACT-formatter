@@ -24,8 +24,10 @@ https://note.com/cute_echium873/n/n997dcf40b3a1
 
 ## Firefoxにおける使用
 
-本拡張機能はMozillaによる認証を受けていないため、デフォルトではインストールすることができません。
-インストールするためには、危険性を十分理解した上で、以下の操作を実行してください。
+https://qiita.com/shuhey/items/57a732e3135b296e2fc1
+を参考にself hostされています。
 
-- アドレスバーに`about:config`と打ち込む
-- `extensions.langpacks.signatures.required`を検索しfalseに設定する
+`.xpi`ファイルと`manifest.json`, `updates.json`は`https://vps.hbenpitsu.net/TTFF/`下に配置されています。
+
+https://addons.mozilla.org/firefox/downloads/file/4264145/2847be690a7940a9bec3-1.0.xpi
+にアクセスしてインストールできます。

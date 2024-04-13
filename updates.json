@@ -1,0 +1,13 @@
+{
+    "addons": {
+      "tactFormatterForFireFox@hbenpitsu.net": {
+        "updates": [
+          {
+            "version": "1.0.0.0",
+            "update_link": "https://vps.hbenpitsu.net/TTFF/TACT-formatter-for-firefox.xpi"
+          }
+        ]
+      }
+    }
+  }
+  
