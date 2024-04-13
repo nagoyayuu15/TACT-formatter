@@ -21,7 +21,7 @@ https://note.com/cute_echium873/n/n997dcf40b3a1
 ~~
 不具合・バグを発見した場合はX(Twitter)の[@suke_0612](https://twitter.com/suke_0612)までご連絡ください。とても元気があったら直します。~~
 
-このリポジトリは他の人間によるフォークです。
+このリポジトリは他の人間(nagoyayuu15@gmail.com)によるフォークです。
 
 ## Firefoxにおける使用
 
