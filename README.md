@@ -29,5 +29,7 @@ https://qiita.com/shuhey/items/57a732e3135b296e2fc1
 
 `.xpi`ファイルと`manifest.json`, `updates.json`は`https://vps.hbenpitsu.net/TTFF/`下に配置されています。
 
+`.xpi`ファイルは`zip -r -FS ../TACT-formatter-for-firefox.xpi.zip * --exclude '*.git*'`によって出力されました。
+
 https://addons.mozilla.org/firefox/downloads/file/4264145/2847be690a7940a9bec3-1.0.xpi
 にアクセスしてインストールできます。
